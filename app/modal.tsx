@@ -1,17 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-export default function ModalScreen() {
+export default function DisclaimerModal() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/modal.tsx" />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <Text style={styles.title}>Fiction only</Text>
+      <Text style={styles.body}>
+        Cosmic Arcana does not give advice and does not claim to know the future. NASA and sky data,
+        if shown, are symbolic flavour — never proof that a reading is true.
+      </Text>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );
@@ -20,16 +19,15 @@ export default function ModalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 24,
+    gap: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '600',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
   },
 });

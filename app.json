@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "cosmic-arcana-mobile",
+    "name": "Cosmic Arcana",
     "slug": "cosmic-arcana-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -31,7 +31,7 @@
         {
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#0b0714"
         }
       ]
     ],

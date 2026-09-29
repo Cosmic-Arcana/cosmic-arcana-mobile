@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@cosmic-arcana/sdk": "github:Cosmic-Arcana/cosmic-arcana-sdk#semver:^0.1.0",
     "expo": "~57.0.26",
     "expo-constants": "~57.0.20",
     "expo-font": "~57.0.4",
@@ -29,7 +30,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "tsc --noEmit",
+    "build": "tsc --noEmit"
   },
   "private": true
 }

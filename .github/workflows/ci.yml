@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: Cosmic-Arcana/cosmic-arcana-infrastructure/.github/workflows/service-ci.yml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      service-name: cosmic-arcana-mobile
+      tier: liveness
+      lint-command: npm run lint
+      build-command: npm run build
+      test-command: ''
+      build-image: false
+      dispatch: false
+    secrets:
+      INFRA_DISPATCH_TOKEN: ${{ secrets.INFRA_DISPATCH_TOKEN }}
