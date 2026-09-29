@@ -12,7 +12,8 @@ export default function AboutScreen() {
       </Text>
       <Text style={styles.body}>
         Card meanings, spread types, and prediction format are not defined yet. The Ask tab posts
-        to tarot-service-api and shows the stub generator fields as they are stored.
+        to tarot-service-api and shows the stub generator fields as they are stored. Cards on Ask
+        and Watch are 3D slabs of those ids, not invented artwork.
       </Text>
       <Text style={styles.body}>
         Sign-in is not wired. A fixed demo user id is sent until authority-service-api exists.

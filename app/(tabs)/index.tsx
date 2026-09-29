@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import type { SpreadDetailsV1 } from '@cosmic-arcana/sdk';
 
+import { CardSlabs } from '@/components/CardSlabs';
 import { Text, View } from '@/components/Themed';
 import { createSpread, tarotBaseUrl } from '@/lib/tarot-api';
 
@@ -65,16 +66,11 @@ export default function AskScreen() {
         {busy ? <ActivityIndicator color="#0b0714" /> : <Text style={styles.buttonLabel}>Ask</Text>}
       </Pressable>
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      <CardSlabs cards={spread?.cards ?? []} />
       {spread ? (
         <View style={styles.card} lightColor="#161022" darkColor="#161022">
           <Text style={styles.section}>Stub fields from tarot-service-api</Text>
           <Text style={styles.meta}>id {spread.spreadId}</Text>
-          {spread.cards.map((card) => (
-            <Text key={`${card.positionKey}-${card.cardId}`} style={styles.body}>
-              {card.positionKey} · {card.cardId}
-              {card.reversed ? ' · reversed' : ''}
-            </Text>
-          ))}
           <Text style={styles.body}>{spread.prediction}</Text>
         </View>
       ) : null}

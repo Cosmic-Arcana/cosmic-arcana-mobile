@@ -46,6 +46,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="watch"
+        options={{
+          title: 'Watch',
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{ ios: 'clock', android: 'watch', web: 'watch' }}
+              tintColor={color}
+              size={28}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="about"
         options={{
           title: 'About',
