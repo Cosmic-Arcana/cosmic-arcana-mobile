@@ -10,6 +10,11 @@ import type { SpreadDetailsV1 } from '@cosmic-arcana/sdk';
 
 import { CardSlabs } from '@/components/CardSlabs';
 import { Text, View } from '@/components/Themed';
+import {
+  GRAPHICS_MODES,
+  assessMobileGraphics,
+  type GraphicsMode,
+} from '@/lib/graphics-capability';
 import { createSpread, tarotBaseUrl } from '@/lib/tarot-api';
 
 export default function AskScreen() {
@@ -17,6 +22,8 @@ export default function AskScreen() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [spread, setSpread] = useState<SpreadDetailsV1 | null>(null);
+  const [mode, setMode] = useState<GraphicsMode>('medium');
+  const graphics = assessMobileGraphics();
   const configured = Boolean(tarotBaseUrl());
 
   const onAsk = async () => {
@@ -66,7 +73,19 @@ export default function AskScreen() {
         {busy ? <ActivityIndicator color="#0b0714" /> : <Text style={styles.buttonLabel}>Ask</Text>}
       </Pressable>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <CardSlabs cards={spread?.cards ?? []} />
+      <View style={styles.modes} lightColor="#0b0714" darkColor="#0b0714">
+        {GRAPHICS_MODES.map((option) => (
+          <Pressable
+            key={option}
+            onPress={() => setMode(option)}
+            disabled={GRAPHICS_MODES.indexOf(option) > GRAPHICS_MODES.indexOf(graphics.maxMode)}
+            style={[styles.mode, mode === option && styles.modeOn]}>
+            <Text style={styles.modeLabel}>{option}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <Text style={styles.hint}>{graphics.reason}</Text>
+      <CardSlabs cards={spread?.cards ?? []} mode={mode} motion={graphics.allowMotion} />
       {spread ? (
         <View style={styles.card} lightColor="#161022" darkColor="#161022">
           <Text style={styles.section}>Stub fields from tarot-service-api</Text>
@@ -145,5 +164,23 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 15,
     lineHeight: 22,
+  },
+  modes: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  mode: {
+    borderWidth: 1,
+    borderColor: '#7c3aed',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  modeOn: {
+    backgroundColor: '#3b0764',
+  },
+  modeLabel: {
+    color: '#f5f3ff',
+    fontSize: 13,
   },
 });

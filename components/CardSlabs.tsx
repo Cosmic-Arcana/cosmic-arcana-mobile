@@ -9,10 +9,25 @@ import Animated, {
 import type { SpreadCardV1 } from '@cosmic-arcana/sdk';
 
 import { Text } from '@/components/Themed';
+import type { GraphicsMode } from '@/lib/graphics-capability';
 
 type CardSlabsProps = {
   cards: SpreadCardV1[];
   compact?: boolean;
+  mode?: GraphicsMode;
+  motion?: boolean;
+};
+
+const PALETTE: Record<GraphicsMode, { face: string; gold: string }> = {
+  light: { face: '#fde68a', gold: '#b45309' },
+  medium: { face: '#1a1030', gold: '#d4af37' },
+  heavy: { face: '#4a044e', gold: '#fb7185' },
+};
+
+const TILT: Record<GraphicsMode, number> = {
+  light: 8,
+  medium: 18,
+  heavy: 28,
 };
 
 function Slab({
@@ -21,26 +36,34 @@ function Slab({
   compact,
   tiltX,
   tiltY,
+  mode,
+  motion,
 }: {
   card: SpreadCardV1 | null;
   index: number;
   compact: boolean;
   tiltX: SharedValue<number>;
   tiltY: SharedValue<number>;
+  mode: GraphicsMode;
+  motion: boolean;
 }) {
+  const scale = motion ? TILT[mode] : 0;
+  const palette = PALETTE[mode];
   const style = useAnimatedStyle(() => ({
     transform: [
       { perspective: 900 },
-      { rotateX: `${tiltY.value * 18}deg` },
-      { rotateY: `${tiltX.value * 22}deg` },
-      { rotateZ: `${tiltX.value * tiltY.value * 10 + (index - 1) * 8}deg` },
+      { rotateX: `${tiltY.value * scale}deg` },
+      { rotateY: `${tiltX.value * (scale + 4)}deg` },
+      { rotateZ: `${tiltX.value * tiltY.value * (scale / 2) + (index - 1) * 8}deg` },
       { scale: compact ? 0.72 : 1 },
     ],
+    backgroundColor: palette.face,
+    borderColor: palette.gold,
   }));
 
   return (
     <Animated.View style={[compact ? styles.slabCompact : styles.slab, style]}>
-      <View style={styles.gold} />
+      <View style={[styles.gold, { backgroundColor: palette.gold }]} />
       <Text style={styles.face}>{card ? card.cardId : '—'}</Text>
       {card ? (
         <Text style={styles.meta}>
@@ -54,7 +77,12 @@ function Slab({
   );
 }
 
-export function CardSlabs({ cards, compact = false }: CardSlabsProps) {
+export function CardSlabs({
+  cards,
+  compact = false,
+  mode = 'medium',
+  motion = true,
+}: CardSlabsProps) {
   const shown: Array<SpreadCardV1 | null> =
     cards.length === 0 ? [null] : cards.slice(0, 3);
   const tiltX = useSharedValue(0);
@@ -97,6 +125,8 @@ export function CardSlabs({ cards, compact = false }: CardSlabsProps) {
           compact={compact}
           tiltX={tiltX}
           tiltY={tiltY}
+          mode={mode}
+          motion={motion}
         />
       ))}
     </View>
