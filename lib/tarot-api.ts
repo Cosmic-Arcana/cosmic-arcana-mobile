@@ -5,10 +5,16 @@ import { DEMO_USER_ID, newIdempotencyKey } from './demo-identity';
 export const tarotBaseUrl = (): string =>
   (process.env.EXPO_PUBLIC_TAROT_BASE_URL ?? '').replace(/\/$/, '');
 
-export const createSpread = async (question: string): Promise<SpreadDetailsV1> => {
+export const createSpread = async (
+  question: string,
+  consent: boolean,
+): Promise<SpreadDetailsV1> => {
   const base = tarotBaseUrl();
   if (!base) {
     throw new Error('EXPO_PUBLIC_TAROT_BASE_URL is not set');
+  }
+  if (!consent) {
+    throw new Error('consent required');
   }
 
   const trimmed = question.trim();

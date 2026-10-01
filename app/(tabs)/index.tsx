@@ -24,13 +24,14 @@ export default function AskScreen() {
   const [spread, setSpread] = useState<SpreadDetailsV1 | null>(null);
   const [mode, setMode] = useState<GraphicsMode>('medium');
   const graphics = assessMobileGraphics();
+  const [consent, setConsent] = useState(false);
   const configured = Boolean(tarotBaseUrl());
 
   const onAsk = async () => {
     setError(null);
     setBusy(true);
     try {
-      setSpread(await createSpread(question));
+      setSpread(await createSpread(question, consent));
     } catch (cause) {
       setSpread(null);
       setError(cause instanceof Error ? cause.message : 'request failed');
@@ -44,7 +45,7 @@ export default function AskScreen() {
       <Text style={styles.title}>Cosmic Arcana</Text>
       <Text style={styles.disclaimer}>
         Readings are fiction and entertainment. They are not advice and not a factual claim about
-        the future.
+        the future. Interpretations, when present, are AI-generated.
       </Text>
       {!configured ? (
         <Text style={styles.hint}>
@@ -63,11 +64,20 @@ export default function AskScreen() {
         editable={!busy}
       />
       <Pressable
+        onPress={() => setConsent((value) => !value)}
+        style={styles.button}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: consent }}>
+        <Text style={styles.hint}>
+          {consent ? 'Consent on: ' : 'Tap to consent: '}store this question for a fictional reading.
+        </Text>
+      </Pressable>
+      <Pressable
         onPress={onAsk}
-        disabled={busy || !configured || question.trim().length === 0}
+        disabled={busy || !configured || question.trim().length === 0 || !consent}
         style={({ pressed }) => [
           styles.button,
-          (busy || !configured || question.trim().length === 0) && styles.buttonDisabled,
+          (busy || !configured || question.trim().length === 0 || !consent) && styles.buttonDisabled,
           pressed && styles.buttonPressed,
         ]}>
         {busy ? <ActivityIndicator color="#0b0714" /> : <Text style={styles.buttonLabel}>Ask</Text>}
