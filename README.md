@@ -3,6 +3,10 @@
 Expo + React Native client (iOS, Android, web). Readings are **fiction**. NASA data, if wired later,
 is symbolic only.
 
+Built by **vibe coding**: Claude remote control **and** Cursor (~$190 usage credits left after the
+hackathon). No Auth0 on this app yet — demo `userId` until you create a native Auth0 app (see
+`docs/completeness-audit.md` owner TODOs).
+
 ## Run
 
 ```bash
